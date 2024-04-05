@@ -15,7 +15,6 @@ const swaggerui=require("swagger-ui-express");
 const app = express();
 
 app.use(cors({
-  origin: 'https://mybrand-backend-production-861a.up.railway.app/',
   credentials: true,
 }));
 
@@ -28,7 +27,7 @@ const options = {
       description:"This is swagger documentation for myBrand project."
     },
     servers: [{
-      url: "https://mybrand-backend-production-861a.up.railway.app/"
+      url: "http://localhost:8080/"
     }]
   },
   apis: ["./src/router/*.ts"]
