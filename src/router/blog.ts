@@ -94,8 +94,8 @@ import { createBlogs,getAllBlogs,updateBlog,deleteBlog } from '../controllers/bl
 import { isAuthenticated, isOwner,isAdmin } from '../middlewares';
 
 export default (router: express.Router) => {
-  router.get('/blogs',isAuthenticated, getAllBlogs);
-  router.delete('/deleteBlog/:id',isAuthenticated,deleteBlog);
-  router.patch('/updateBlog/:id',isAuthenticated,updateBlog);
-  router.post('/createBlog',isAuthenticated,createBlogs);
+  router.get('/blogs',getAllBlogs);
+  router.delete('/deleteBlog/:id',isAuthenticated,isAdmin,deleteBlog);
+  router.patch('/updateBlog/:id',updateBlog);
+  router.post('/createBlog',createBlogs);
 };

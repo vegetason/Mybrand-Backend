@@ -1,69 +1,104 @@
 import express from 'express';
-import { merge, get } from 'lodash';
+import {get, merge} from 'lodash';
+import jwt, {JwtPayload} from 'jsonwebtoken';
 
-import { getUserBySessionToken } from '../db/users'; 
+import { getUserById } from '../db/users';
+
+export interface CustomRequest extends express.Request {
+    userId?: string; // Add the 'id' property here
+  }
+
 
 export const isAuthenticated = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  try {
-    const sessionToken = req.cookies['ANTONIO-AUTH'];
-    console.log(sessionToken)
-    if (!sessionToken) {
-      return res.status(403).json({message: "invalid token"});
+    try {
+        // Extract the Authorization header from the request
+        const authorizationHeader = req.headers.authorization;
+        // console.log(authorizationHeader)
+            let token: string;
+    
+        if (authorizationHeader) {
+                const tokenParts = authorizationHeader.split(' ');
+                if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
+                    return res.status(403).json({ message: "Invalid authorization header format" });
+                }
+        
+                token = tokenParts[1];
+                
+            // return res.status(403).json({ message: "No authorization header provided" });
+        }else {
+                token = req.cookies.myToken;
+            }
+        if(!token) {
+            return res.status(403).json({message: "no token"});
+        }
+        const decoded = jwt.verify(token, 'Mysecret')  as JwtPayload & {userId:string}
+        const id = decoded.userId;
+
+        const existingUser = await getUserById(id);
+
+        if (!existingUser) {
+            return res.status(403).json({message: "falseAuth"});
+        }
+
+        merge(req, {identity: existingUser});
+
+        return next();
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({message: "isAuthenticated Error"});
     }
-
-    const existingUser = await getUserBySessionToken(sessionToken);
-    console.log(existingUser)
-    if (!existingUser) {
-      return res.status(403).json({message: "login required"});
-    }
-
-    merge(req, { identity: existingUser });
-
-    return next();
-  } catch (error) {
-    //console.log(error);
-    return res.status(400).json(error);
-  }
 }
 
 export const isOwner = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+        const userId  = req.params.id;
+        const currentUserId = get(req, 'identity._id') as string;
+        if (!currentUserId) {
+            return res.status(403).json({message: "noId"});
+        }
+
+        if (currentUserId.toString() !== userId) {
+            return res.status(403).json({message: "falseOwner"});
+        }
+        next();
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({message: "isOwner Error"});
+    }
+};
+export const isAdmin = async (req: CustomRequest, res: express.Response, next: express.NextFunction) => {
   try {
-    const { id } = req.params;
-    const currentUserId = get(req, 'identity._id') as string;
+      // Extract the Authorization header from the request
+      const authorizationHeader = req.headers.authorization;
+     // console.log(authorizationHeader)
+      let token: string;
 
-    if (!currentUserId) {
-      return res.status(400).json({message: "no UserId"});
-    }
+      if (authorizationHeader) {
+          const tokenParts = authorizationHeader.split(' ');
+          if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
+              return res.status(403).json({ message: "Invalid authorization header format" });
+          }
+  
+          token = tokenParts[1];
+          
+         // return res.status(403).json({ message: "No authorization header provided" });
+      }else {
+          token = req.cookies.myToken;
+      }
 
-    if (currentUserId.toString() !== id) {
-      return res.sendStatus(403);
-    }
+      if (!token) {
+          return res.status(403).json({ message: "no sessionToken0" });
+      }
+      const decoded = jwt.verify(token, 'Mysecret')  as JwtPayload & {userId:string}
+      if(!(decoded.userId === '661f937a29bd0474b48feab4')){
+          return res.status(403).json({message: "unauthorised"});
+      }
 
-    next();
+      return next();
+
   } catch (error) {
-   // console.log(error);
-    return res.status(400).json(error);
-  }
-}
-
-
-export const isAdmin = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  try {
-    const sessionToken = req.cookies['ANTONIO-AUTH'];
-
-    if (!sessionToken) {
-      return res.status(403).json({message:"no user "});
-    }
-
-    const existingUser = await getUserBySessionToken(sessionToken);
-    if (!existingUser) {
-      console.log(existingUser)
-      return res.status(403).json({message:"user not autenticated"});
-    }
-
-    return next();
-  } catch (error) {
-   // console.log(error);
-    return res.status(400).json({message:"Error detected"});
+      console.log(error)
+      return res.status(400).json({message: "isAdmin Error"});
   }
 }

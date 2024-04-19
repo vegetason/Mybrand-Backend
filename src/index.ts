@@ -27,7 +27,7 @@ const options = {
       description:"This is swagger documentation for myBrand project."
     },
     servers: [{
-      url: "http://localhost:8080/"
+      url: "https://mybrand-backend-emhu.onrender.com/"
     }]
   },
   apis: ["./src/router/*.ts"]
@@ -48,7 +48,7 @@ app.use(bodyParser.json());
 const server = http.createServer(app);
 
 server.listen(8080, () => {
-  console.log('Server running on http://localhost:8080/');
+  console.log('Server running on https://mybrand-backend-emhu.onrender.com/');
 });
 
 const MONGO_URL = 'mongodb+srv://irakozepirlo:u6jgO8F5zGlc0vRw@cluster0.u7uvxps.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; // DB URI
@@ -58,3 +58,4 @@ mongoose.connect(MONGO_URL);
 mongoose.connection.on('error', (error: Error) => console.log(error));
 
 app.use('/', router());
+export default app;

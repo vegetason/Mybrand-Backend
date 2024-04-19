@@ -1,12 +1,17 @@
 
 import mongoose from 'mongoose';
 import { title } from 'process';
+import { commentSchema } from './comments';
+import { isArrayLike } from 'lodash';
+import{LikeSchema} from './likes'
 
 // User Config
 const BlogSchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },
   title: { type: String, required: true },
   body: { type: String, required: true },
+  comment:[commentSchema],
+  likes:[LikeSchema]
 });
 
 export const blogModel = mongoose.model('Blog', BlogSchema);
