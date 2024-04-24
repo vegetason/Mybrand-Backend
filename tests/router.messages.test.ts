@@ -5,7 +5,7 @@ import router from '../src/router'; // assuming this is your router setup file
 describe('Router tests', () => {
   const app = express();
   app.use(express.json());
-  router(app);
+  router();
 
   it('should get all messages', async () => {
     const res = await request(app).get('/messages');

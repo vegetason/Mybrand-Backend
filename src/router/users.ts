@@ -47,6 +47,6 @@ import { isAuthenticated, isOwner,isAdmin } from '../middlewares';
 export default (router: express.Router) => {
   router.get('/users',getAllUsers);
   
-  router.delete('/users/:id',isAuthenticated,isOwner,deleteUser);
+  router.delete('/users/:id',deleteUser);
   router.patch('/users/:id',isOwner,isAuthenticated,updateUser);
 };

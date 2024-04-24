@@ -73,5 +73,5 @@ import { isAuthenticated, isOwner,isAdmin } from '../middlewares';
 
 export default (router: express.Router) => {
     router.get('/like',getAllLikes);
-    router.post('/like/:blogid/user/:userId',isAuthenticated,LikeABlog);
+    router.post('/like/:blogid/user/:userId',LikeABlog);
   };

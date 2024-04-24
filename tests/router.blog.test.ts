@@ -2,8 +2,9 @@ import request from 'supertest';
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import routes from '../src/router/blog';
+import app from '../src/index';
 
-const app = express();
+
 app.use(bodyParser.json());
 routes(app);
 

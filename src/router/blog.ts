@@ -96,6 +96,6 @@ import { isAuthenticated, isOwner,isAdmin } from '../middlewares';
 export default (router: express.Router) => {
   router.get('/blogs',getAllBlogs);
   router.delete('/deleteBlog/:id',isAuthenticated,isAdmin,deleteBlog);
-  router.patch('/updateBlog/:id',updateBlog);
-  router.post('/createBlog',createBlogs);
+  router.patch('/updateBlog/:id',isAuthenticated,isAdmin,updateBlog);
+  router.post('/createBlog',isAuthenticated,isAdmin,createBlogs);
 };

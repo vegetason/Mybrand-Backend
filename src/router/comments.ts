@@ -57,6 +57,6 @@ import { isAuthenticated, isOwner,isAdmin } from '../middlewares';
 const configureCommentRoutes=(router: express.Router) => {
   router.get('/comments',getAllComments);
   router.delete('/deleteComment/:id',isAuthenticated,isAdmin,deleteComment);
-  router.post('/createComment/:blogid/user/:userId',isAuthenticated,createComments);
+  router.post('/createComment/:blogid/user/:userId',createComments);
 };
 export default  configureCommentRoutes;

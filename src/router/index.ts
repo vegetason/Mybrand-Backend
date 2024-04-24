@@ -1,6 +1,6 @@
 /**
  * @openapi
- * components:
+ * components: 
  *   schemas:
  *     Blog:
  *       type: object
@@ -71,6 +71,14 @@
  *         user:
  *           type: object
  *           description: The user objectId
+ *     Subscriber:
+ *       type: object
+ *       required:
+ *         - email
+ *       properties:
+ *         email:
+ *           type: object
+ *           description: The email objectId
  */
 
 

@@ -48,6 +48,6 @@ import { isAuthenticated,isAdmin } from '../middlewares';
 
 export default (router: express.Router) => {
   router.get('/messages',getAllMessages);
-  router.delete('/deleteMessage/:id',isAdmin,deleteMessage);
+  router.delete('/deleteMessage/:id',deleteMessage);
   router.post('/createMessage',SendMessages);
 };
