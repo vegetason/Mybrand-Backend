@@ -49,6 +49,6 @@ import { SubscribetoTheArticle,getAllSubscribers } from '../controllers/subscrib
 import { isAuthenticated, isOwner,isAdmin } from '../middlewares';
 
 export default (router: express.Router) => {
-  router.get('/subscribers',getAllSubscribers);
+  router.get('/subscribers',isAuthenticated,isAdmin,getAllSubscribers);
   router.post('/subscribe',SubscribetoTheArticle);
 };

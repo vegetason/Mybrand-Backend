@@ -3,7 +3,7 @@
  * tags:
  *   name: Likes
  *   description: The Likes managing API 
- * /blogs/{id}/like/{userId}:
+ * /like/{id}/user/{userId}:
  *   post:
  *     summary: Creates a like
  *     tags: [Likes]
